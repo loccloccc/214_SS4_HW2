@@ -1,0 +1,14 @@
+#https://github.com/loccloccc/214_SS4_HW.git
+
+spring:
+    application:
+        name: config-microservice
+
+    cloud:
+        config:
+            server:
+                git:
+                    uri: https://github.com/loccloccc/214_SS4_HW.git
+                    default-label: main
+server:
+    port: 8888

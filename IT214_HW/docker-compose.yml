@@ -1,0 +1,161 @@
+services:
+
+  # ==================================================
+  # KAFKA
+  # ==================================================
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: session04-kafka-1
+    restart: unless-stopped
+
+    ports:
+      - "9092:9092"
+
+    environment:
+      # KRaft: Kafka vừa làm Broker vừa làm Controller
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: "broker,controller"
+
+      # Controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+
+      # Listener
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
+
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT"
+
+      # Cluster ID
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+
+      # Single-node Kafka
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+
+  # ==================================================
+  # REDIS
+  # ==================================================
+  redis:
+    image: redis:latest
+    container_name: session04-redis-1
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    command:
+      - redis-server
+      - --requirepass
+      - "your_secure_password"
+
+
+  # ==================================================
+  # APPOINTMENT DATABASE
+  # ==================================================
+  appointment-db:
+    image: mysql:8.4
+    container_name: appointment-db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: "duongloc2505"
+      MYSQL_DATABASE: "appointment_db"
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - appointment_db_data:/var/lib/mysql
+
+
+  # ==================================================
+  # DOCTOR DATABASE
+  # ==================================================
+  doctor-db:
+    image: mysql:8.4
+    container_name: doctor-db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: "duongloc2505"
+      MYSQL_DATABASE: "doctor_db"
+
+    ports:
+      - "3308:3306"
+
+    volumes:
+      - doctor_db_data:/var/lib/mysql
+
+
+  # ==================================================
+  # MEDICAL RECORD DATABASE
+  # ==================================================
+  medical-record-db:
+    image: mysql:8.4
+    container_name: medical-record-db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: "duongloc2505"
+      MYSQL_DATABASE: "medical_record_db"
+
+    ports:
+      - "3309:3306"
+
+    volumes:
+      - medical_record_db_data:/var/lib/mysql
+
+
+  # ==================================================
+  # PATIENT DATABASE
+  # ==================================================
+  patient-db:
+    image: mysql:8.4
+    container_name: patient-db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: "duongloc2505"
+      MYSQL_DATABASE: "patient_db"
+
+    ports:
+      - "3310:3306"
+
+    volumes:
+      - patient_db_data:/var/lib/mysql
+
+
+  # ==================================================
+  # PHARMACY DATABASE
+  # ==================================================
+  pharmacy-db:
+    image: mysql:8.4
+    container_name: pharmacy-db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: "duongloc2505"
+      MYSQL_DATABASE: "pharmacy_db"
+
+    ports:
+      - "3311:3306"
+
+    volumes:
+      - pharmacy_db_data:/var/lib/mysql
+
+
+
+
+
+# ==================================================
+# VOLUMES
+# ==================================================
+volumes:
+  appointment_db_data:
+  doctor_db_data:
+  medical_record_db_data:
+  patient_db_data:
+  pharmacy_db_data:
